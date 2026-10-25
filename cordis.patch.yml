@@ -1,0 +1,3 @@
+- insert:
+    - id: dsh-plugin-terminal-upgrades
+      name: 'dsh-plugin-terminal-upgrades'

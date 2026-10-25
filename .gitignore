@@ -1,0 +1,6 @@
+node_modules
+.build
+.npm-cache
+.pnpm-store
+.pnpm-home
+.DS_Store
