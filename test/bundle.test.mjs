@@ -19,6 +19,7 @@ test('the built bundle registers one module and cleans up its listeners', async 
       documentListeners.splice(index, 1);
     },
   };
+  globalThis.fetch = async () => ({ ok: false });
   globalThis.window = {
     __ModuleLoader__: {
       load: ({ id, factory }) => { loaded = { id, exports: factory(() => ({})) }; },
@@ -39,7 +40,7 @@ test('the built bundle registers one module and cleans up its listeners', async 
 
   loaded.exports.apply({ effect: (setup) => disposers.push(setup()) });
 
-  assert.deepEqual(documentListeners.map(([type]) => type), ['mousedown', 'mouseup', 'click', 'mousemove', 'keyup']);
+  assert.deepEqual(documentListeners.map(([type]) => type), ['mousedown', 'mouseup', 'click', 'mousemove', 'keydown', 'keyup', 'scroll', 'wheel']);
   assert.deepEqual(windowListeners.map(([type]) => type), ['blur']);
 
   for (const dispose of disposers) dispose();
@@ -47,8 +48,9 @@ test('the built bundle registers one module and cleans up its listeners', async 
   assert.equal(windowListeners.length, 0);
 });
 
-test('the bundle ships no Host route', async () => {
+test('the bundle reads only its own config route', async () => {
   const source = await readFile(new URL('../client.js', import.meta.url), 'utf8');
   assert.match(source, /Generated from src\/client\.js/);
-  assert.doesNotMatch(source, /fetch\(|XMLHttpRequest/);
+  assert.match(source, /\/__dsh\/terminal-upgrades/);
+  assert.doesNotMatch(source, /XMLHttpRequest/);
 });

@@ -80,3 +80,29 @@ function unbalancedClosing(url) {
 function count(text, character) {
   return text.split(character).length - 1;
 }
+
+/**
+ * Split a link into the horizontal spans it covers, so a link crossing a color
+ * change is underlined in every span it touches.
+ *
+ * @param {{ start: number, left: number, width: number, length: number, top: number, height: number }[]} runs - the row's spans in reading order.
+ * @param {{ start: number, end: number }} link - the link's character range.
+ * @returns {{ left: number, top: number, width: number, height: number }[]} one segment per touched span.
+ */
+export function linkSegments(runs, link) {
+  const segments = [];
+  for (const run of runs) {
+    if (run.length <= 0 || run.width <= 0) continue;
+    const start = Math.max(link.start, run.start);
+    const end = Math.min(link.end, run.start + run.length);
+    if (end <= start) continue;
+    const unit = run.width / run.length;
+    segments.push({
+      left: run.left + (start - run.start) * unit,
+      top: run.top,
+      width: (end - start) * unit,
+      height: run.height,
+    });
+  }
+  return segments;
+}

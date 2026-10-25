@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { findUrls, runOffset, urlAtOffset } from '../src/links.js';
+import { findUrls, linkSegments, runOffset, urlAtOffset } from '../src/links.js';
 
 test('finds every URL in a dev-server banner row', () => {
   const row = '  - Local:        http://localhost:3000  Network: http://10.0.0.79:3000';
@@ -76,4 +76,30 @@ test('skips empty and zero-width spans', () => {
   ];
   assert.equal(runOffset(runs, 15), 4);
   assert.equal(runOffset(runs, 0), undefined);
+});
+
+test('underlines only the URL inside a span', () => {
+  const runs = [{ start: 0, left: 100, top: 20, width: 200, height: 20, length: 20 }];
+  assert.deepEqual(linkSegments(runs, { start: 5, end: 15 }), [
+    { left: 150, top: 20, width: 100, height: 20 },
+  ]);
+});
+
+test('splits a link that crosses a color change', () => {
+  const runs = [
+    { start: 0, left: 0, top: 0, width: 60, height: 20, length: 6 },
+    { start: 6, left: 60, top: 0, width: 80, height: 20, length: 8 },
+  ];
+  assert.deepEqual(linkSegments(runs, { start: 4, end: 10 }), [
+    { left: 40, top: 0, width: 20, height: 20 },
+    { left: 60, top: 0, width: 40, height: 20 },
+  ]);
+});
+
+test('ignores empty spans when underlining', () => {
+  const runs = [
+    { start: 0, left: 0, top: 0, width: 0, height: 20, length: 3 },
+    { start: 3, left: 30, top: 0, width: 0, height: 20, length: 0 },
+  ];
+  assert.deepEqual(linkSegments(runs, { start: 0, end: 2 }), []);
 });

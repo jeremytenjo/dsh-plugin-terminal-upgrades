@@ -1,9 +1,9 @@
 {
   "name": "dsh-plugin-terminal-upgrades",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
   "type": "module",
-  "description": "Terminal upgrades for DeepSeek Harness: option-click a link in the terminal to open it in your browser.",
+  "description": "Terminal upgrades for DeepSeek Harness: hold Option over a terminal link to underline it, and click to open it in your browser. The trigger key is configurable.",
   "license": "MIT",
   "author": "Jeremy Tenjo",
   "keywords": [
