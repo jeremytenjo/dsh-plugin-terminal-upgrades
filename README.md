@@ -24,6 +24,7 @@ In the desktop app, open **Plugins** in the sidebar, choose **Add plugin**, and 
 For another profile, use the CLI:
 
 ```bash
+git clone https://github.com/jeremytenjo/dsh-plugin-terminal-upgrades.git
 dsh plugin --profile <profile> add ./dsh-plugin-terminal-upgrades
 ```
 
